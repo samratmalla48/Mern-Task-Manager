@@ -2,6 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const taskRoutes = require("./routes/taskRoutes");
+
+
 
 // Load environment variables from .env file
 dotenv.config();
@@ -11,6 +14,7 @@ const app = express();
 // Middleware
 app.use(express.json()); // For parsing application/json
 app.use(cors()); // Enable CORS
+app.use("/api/tasks", taskRoutes);
 
 // Connect to MongoDB
 mongoose
