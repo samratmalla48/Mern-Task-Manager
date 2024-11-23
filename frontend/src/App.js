@@ -1,20 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import TaskList from "./pages/TaskList";
-import AddTask from "./pages/AddTask";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "./api/axiosInstance";
 
-function App() {
+const App = () => {
+  const [tasks, setTasks] = useState([]);
+
+  // Fetch tasks from the backend
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axiosInstance.get("/tasks");
+        setTasks(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/tasks" element={<TaskList />} />
-          <Route path="/add-task" element={<AddTask />} />
-        </Routes>
-      </div>
-    </Router>
+    <div>
+      <h1>Task Manager</h1>
+      <ul>
+        {tasks.map((task) => (
+          <li key={task._id}>
+            {task.name} - {task.completed ? "Completed" : "Not Completed"}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
-}
+};
 
 export default App;
