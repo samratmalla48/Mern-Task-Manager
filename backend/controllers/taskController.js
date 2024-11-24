@@ -12,13 +12,20 @@ const getTasks = async (req, res) => {
 
 // Create a new task
 const createTask = async (req, res) => {
-  try {
-    const task = await Task.create(req.body);
-    res.status(201).json(task);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+    const { name } = req.body;
+
+    if (!name || name.trim() === "") {
+        return res.status(400).json({ message: "Task name is required" });
+    }
+
+    try {
+        const task = await Task.create(req.body);
+        res.status(201).json(task);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
+
 
 // Get a single task
 const getTask = async (req, res) => {
