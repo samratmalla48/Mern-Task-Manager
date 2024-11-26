@@ -63,6 +63,21 @@ const App = () => {
     }
   };
 
+  // Delete a task
+  const deleteTask = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this task?");
+    if (!confirmDelete) return;
+
+    try {
+      await axiosInstance.delete(`/tasks/${id}`);
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+      setError(null); // Clear any previous errors
+    } catch (err) {
+      console.error("Error deleting task:", err);
+      setError("Failed to delete task. Please try again later.");
+    }
+  };
+
   return (
     <div>
       <h1>Task Manager</h1>
@@ -87,6 +102,9 @@ const App = () => {
             {task.name} - {task.completed ? "Completed" : "Not Completed"}
             <button onClick={() => toggleTaskStatus(task._id, task.completed)}>
               {task.completed ? "Mark Incomplete" : "Mark Complete"}
+            </button>
+            <button onClick={() => deleteTask(task._id)} style={{ marginLeft: "10px", color: "red" }}>
+              Delete
             </button>
           </li>
         ))}
